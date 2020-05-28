@@ -1,12 +1,17 @@
 import time
 import tracemalloc
 
-from math import sin, cos, tan, log
+from math import sin, cos, tan, pi, log
+root = lambda x, y : x**(1/y) 
+ln = log
+lg = lambda x : log(x, 10)
 e = 2.71828182846
-pi = 3.141592653589793
+
+#pi = 3.141592653589793
 
 class InvalidSymbols(Exception):
     pass
+
 
 def rectangle_rule(func, a, b, nseg=100):
     dx = 1.0 * (b - a) / nseg
@@ -45,13 +50,14 @@ def processArguments(args, method):
                 limits.append(float(i))
             else:
                 limits.append(float(eval(i)))
-    
+    # datnek : greenzB0!
     a = limits[0]
     b = limits[1]
     for sign in ('import', ';', ',', '&', '$', '#', '@'):
         if sign in args[2]:
             raise InvalidSymbols('Invalid Symbols in text area')
-    func = eval(f'lambda x: {args[2]}')
+    #func = eval(f'lambda x: {args[2]}')
+    func = lambda x : eval(args[2])
     #print(args)
     if method == 'Trapezoid method':
         result = (trapezoid_rule, (func, a, b))
@@ -72,11 +78,16 @@ def processArguments(args, method):
     mem_usage = f"Current memory usage is {current / 10 ** 6}MB; Peak was {peak / 10 ** 6}MB"
 
     tracemalloc.stop ()
-
     return (result, exec_time, mem_usage)
 
 
 if __name__ == '__main__':
-    #a = rimansIntegral(a=float(input("a : ")), b=float(input("b : ")), func=input('Enter function : '))
-    #print(a)
-    pass
+    temp = input('Function : ')
+    func = lambda x: eval(temp)
+    a = float(input('Lower limit : '))
+    b = float(input('Upper limit : '))
+
+    method = 'Trapezoid method'
+    if method == 'Trapezoid method':
+        result = trapezoid_rule(func, a, b)
+    print(result)
